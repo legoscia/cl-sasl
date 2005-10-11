@@ -1,0 +1,37 @@
+This is an SASL client library for Common Lisp.
+
+* Dependencies
+This library depends on cl-md5.  Find it in Debian or on cliki.
+
+* Supported mechanisms
+Currently PLAIN and DIGEST-MD5 are supported.  Non-ASCII data will
+probably not work.
+
+* Usage
+Create an instance of the mechanism you want to use.  If you want to
+get the class name from the mechanism name, use get-mechanism.  E.g:
+
+(let* ((mechanism "DIGEST-MD5")
+       (client (make-instance (sasl:get-mechanism mechanism)
+       	       		      :authentication-id "username"
+			      :password "secret"
+			      :service "imap"
+			      :host "server")))
+  ...
+)
+
+Once you have such an instance, call sasl:client-step with the data
+you receive from the server (NIL if this is the first roundtrip).
+This function returns either a string to send to the server, or
+:FAILURE.  Once the server says that authentication is successful,
+call sasl:client-step with :SUCCESS, and proceed _only_ if it returns
+:SUCCESS.
+
+* Compatibility
+I have only tested this code on CLISP, but it should work on other
+implementations as well.
+
+
+Local variables:
+mode: outline
+End:
