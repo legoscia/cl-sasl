@@ -31,6 +31,9 @@ call sasl:client-step with :SUCCESS, and proceed _only_ if it returns
 I have only tested this code on CLISP, but it should work on other
 implementations as well.
 
+* Contact
+Feedback goes to henoch@dtek.chalmers.se.
+
 
 Local variables:
 mode: outline
