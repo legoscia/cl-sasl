@@ -32,7 +32,8 @@ implementations as well.  The code assumes that CHAR-CODE returns the
 Unicode code point for every character in the given arguments.
 
 * Contact
-Feedback goes to henoch@dtek.chalmers.se.
+Feedback goes to henoch@dtek.chalmers.se (e-mail) or
+legoscia@jabber.cd.chalmers.se (Jabber/XMPP).
 
 
 Local variables:
