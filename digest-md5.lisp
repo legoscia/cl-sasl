@@ -20,8 +20,9 @@ as specified in RFC 2831."))
     (:start
      ;; The server goes first, so wait if no input yet
      (if (null server-input)
-	 ""
-       (let ((challenge (parse-challenge server-input)))
+	 #()
+       ;; XXX: we assume that the challenge is pure ASCII.  correct?
+       (let ((challenge (parse-challenge (map 'string #'code-char server-input))))
 
 	 ;; If we know what realm we want, make sure we get it:
 	 (if (realm c)
@@ -44,25 +45,27 @@ as specified in RFC 2831."))
 	 (setf (state c) :sent)
 
 	 ;; XXX: obey charset directive
-	 (apply #'concatenate 'string
-		"username=\"" (authc-id c) "\","
-		"realm=\"" (realm c) "\","
-		"nonce=\"" (nonce c) "\","
-		"cnonce=\"" (cnonce c) "\","
-		"nc=00000001,"
-		"qop=auth,"
-		"digest-uri=\"" (digest-uri-value c) "\","
-		"charset=utf-8,"
-		"response=" (response-value c t)
-		(when (authz-id c)
-		  ",authzid=\"" (authz-id c) "\"")))))
+	 (string-to-utf8
+	  (apply #'concatenate 'string
+		 "username=\"" (authc-id c) "\","
+		 "realm=\"" (realm c) "\","
+		 "nonce=\"" (nonce c) "\","
+		 "cnonce=\"" (cnonce c) "\","
+		 "nc=00000001,"
+		 "qop=auth,"
+		 "digest-uri=\"" (digest-uri-value c) "\","
+		 "charset=utf-8,"
+		 "response=" (response-value c t)
+		 (when (authz-id c)
+		   ",authzid=\"" (authz-id c) "\""))))))
     (:sent
-     (let ((challenge (parse-challenge server-input)))
+     ;; XXX: we assume that the challenge is pure ASCII.  correct?
+     (let ((challenge (parse-challenge (map 'string #'code-char server-input))))
        (if (string= (cdr (assoc "rspauth" challenge :test #'string=))
 		    (response-value c nil))
 	   (progn
 	     (setf (state c) :success)
-	     "")
+	     #())
 	 :failure)))
     (:success
      (if (eql server-input :success)
@@ -77,16 +80,14 @@ as specified in RFC 2831."))
   (labels ((c (&rest strings) (apply #'concatenate 'string strings))
 	   (to-bytes (maybe-string)
 		     (if (stringp maybe-string)
-			 (map '(simple-array
-				(unsigned-byte 8))
-			      #'char-code maybe-string)
+			 (string-to-latin1-or-utf8 maybe-string)
 		       maybe-string))
 	   (c-b (&rest maybe-strings) (apply #'concatenate 
 					     '(simple-array
 					       (unsigned-byte 8))
 					     (map 'list #'to-bytes
 						  maybe-strings)))
-	   (h (string) (md5:md5sum-sequence string))
+	   (h (string) (md5:md5sum-sequence (to-bytes string)))
 	   (kd (k s) (h (c k ":" s)))
 	   (hex (hash) (md5sum-to-hex hash)))
     (let ((a1 (if authz-id
@@ -149,5 +150,14 @@ Start at index START."
 	(if (null comma-position)
 	    (cons new-entry accumulated)
 	  (parse-challenge challenge (1+ comma-position) (cons new-entry accumulated)))))))
+
+(defun string-to-latin1-or-utf8 (string)
+  "Convert STRING to ISO 8859-1 if possible, else to UTF-8.
+Return a byte array."
+  (if (every #'in-latin1-p string)
+      (map '(array (unsigned-byte 8))
+	   #'char-code
+	   string)
+    (string-to-utf8 string)))
 
 ;; arch-tag: bda651ac-39ec-11da-9ea5-000a95c2fcd0

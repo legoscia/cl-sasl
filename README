@@ -4,8 +4,7 @@ This is an SASL client library for Common Lisp.
 This library depends on cl-md5.  Find it in Debian or on cliki.
 
 * Supported mechanisms
-Currently PLAIN and DIGEST-MD5 are supported.  Non-ASCII data will
-probably not work.
+Currently PLAIN and DIGEST-MD5 are supported.
 
 * Usage
 Create an instance of the mechanism you want to use.  If you want to
@@ -29,7 +28,8 @@ call sasl:client-step with :SUCCESS, and proceed _only_ if it returns
 
 * Compatibility
 I have only tested this code on CLISP, but it should work on other
-implementations as well.
+implementations as well.  The code assumes that CHAR-CODE returns the
+Unicode code point for every character in the given arguments.
 
 * Contact
 Feedback goes to henoch@dtek.chalmers.se.

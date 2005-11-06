@@ -13,10 +13,10 @@ as specified in RFC 2595, section 6."))
   (ecase (state c)
     (:start
      (setf (state c) :sent)
-     (concatenate 'string 
-		  (authz-id c) (string (code-char 0))
-		  (authc-id c) (string (code-char 0))
-		  (get-password (password c))))
+     (concatenate '(vector (unsigned-byte 8))
+		  (string-to-utf8 (authz-id c)) '(0)
+		  (string-to-utf8 (authc-id c)) '(0)
+		  (string-to-utf8 (get-password (password c)))))
 
     (:sent
      :success)))

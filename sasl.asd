@@ -14,7 +14,8 @@
 
   :components
   ((:file "packages")
-   (:file "client" :depends-on ("packages"))
+   (:file "util" :depends-on ("packages"))
+   (:file "client" :depends-on ("packages" "util"))
    (:file "plain" :depends-on ("client"))
    (:file "digest-md5" :depends-on ("client"))))
 
