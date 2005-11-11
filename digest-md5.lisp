@@ -57,7 +57,7 @@ as specified in RFC 2831."))
 		 "charset=utf-8,"
 		 "response=" (response-value c t)
 		 (when (authz-id c)
-		   ",authzid=\"" (authz-id c) "\""))))))
+		   (list ",authzid=\"" (authz-id c) "\"")))))))
     (:sent
      ;; XXX: we assume that the challenge is pure ASCII.  correct?
      (let ((challenge (parse-challenge (map 'string #'code-char server-input))))
