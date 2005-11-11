@@ -20,11 +20,11 @@ get the class name from the mechanism name, use get-mechanism.  E.g:
 )
 
 Once you have such an instance, call sasl:client-step with the data
-you receive from the server (NIL if this is the first roundtrip).
-This function returns either a string to send to the server, or
-:FAILURE.  Once the server says that authentication is successful,
-call sasl:client-step with :SUCCESS, and proceed _only_ if it returns
-:SUCCESS.
+you receive from the server (NIL if this is the first roundtrip,
+otherwise as a byte vector).  This function returns either a byte
+vector to send to the server, or :FAILURE.  Once the server says that
+authentication is successful, call sasl:client-step with :SUCCESS, and
+proceed _only_ if it returns :SUCCESS.
 
 * Compatibility
 I have only tested this code on CLISP, but it should work on other
