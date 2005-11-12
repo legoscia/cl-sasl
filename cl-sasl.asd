@@ -1,11 +1,11 @@
 ;;; -*- mode: lisp; -*-
 
-(defpackage sasl-system
+(defpackage cl-sasl-system
   (:use :cl :asdf))
 
-(in-package :sasl-system)
+(in-package :cl-sasl-system)
 
-(defsystem sasl
+(defsystem cl-sasl
   :description "SASL library"
   :version "0.1"
   :licence "BSD-style"

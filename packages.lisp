@@ -2,6 +2,7 @@
 
 (defpackage :sasl
   (:use :cl)
+  (:nicknames :cl-sasl)
   (:export
    :get-mechanism
    :client :client-step :mechanism-name
