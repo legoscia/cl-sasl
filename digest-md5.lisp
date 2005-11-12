@@ -89,7 +89,7 @@ as specified in RFC 2831."))
 						  maybe-strings)))
 	   (h (string) (ironclad:digest-sequence :md5 (to-bytes string)))
 	   (kd (k s) (h (c k ":" s)))
-	   (hex (hash) (md5sum-to-hex hash)))
+	   (hex (hash) (ironclad:byte-array-to-hex-string hash)))
     (let ((a1 (if authz-id
 		  (c-b (h (c authc-id ":" realm ":" password))
 		       ":" nonce ":" cnonce ":" authz-id)
@@ -105,16 +105,6 @@ as specified in RFC 2831."))
       (hex (kd (hex (h a1))
 	       (c nonce ":" nc ":"
 		  cnonce ":" qop ":" (hex (h a2))))))))
-      
-(defun md5sum-to-hex (md5sum)
-  "Convert MD5SUM, a vector of 16 bytes, to a string of 32 lowercase hex digits."
-  (string-downcase 
-   (apply #'concatenate 'string
-	  (map 'list (lambda (n)
-		       ;; Note the zero-padded hex digits!  Forgetting that
-		       ;; gives bugs that are hard to find.
-		       (format nil "~2,'0X" n))
-	       md5sum))))
 
 (defun parse-challenge (challenge &optional (start 0) accumulated)
   "Parse CHALLENGE and return it as an alist.
