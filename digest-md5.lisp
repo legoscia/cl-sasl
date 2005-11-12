@@ -83,7 +83,7 @@ as specified in RFC 2831."))
 			 (string-to-latin1-or-utf8 maybe-string)
 		       maybe-string))
 	   (c-b (&rest maybe-strings) (apply #'concatenate 
-					     '(simple-array
+					     '(vector
 					       (unsigned-byte 8))
 					     (map 'list #'to-bytes
 						  maybe-strings)))
@@ -153,9 +153,9 @@ Start at index START."
 
 (defun string-to-latin1-or-utf8 (string)
   "Convert STRING to ISO 8859-1 if possible, else to UTF-8.
-Return a byte array."
+Return a byte vector."
   (if (every #'in-latin1-p string)
-      (map '(array (unsigned-byte 8))
+      (map '(vector (unsigned-byte 8))
 	   #'char-code
 	   string)
     (string-to-utf8 string)))

@@ -33,12 +33,12 @@
 
 (defgeneric client-step (client server-input)
   (:documentation "Perform a step in the SASL authentication.
-SERVER-INPUT is a byte array containing the response from the
+SERVER-INPUT is a byte vector containing the response from the
 server, or NIL if the client should start the exchange, or the
 keyword :SUCCESS if the server reported successful
 authentication.
 
-Returns a byte array to be sent in response to the server,
+Returns a byte vector to be sent in response to the server,
 or :SUCCESS if the client should consider authentication
 successful, or :FAILURE if the client should consider
 authentication failed.  Obeying this result is important, as some
