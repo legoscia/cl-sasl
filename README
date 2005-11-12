@@ -1,7 +1,8 @@
 This is an SASL client library for Common Lisp.
 
 * Dependencies
-This library depends on cl-md5.  Find it in Debian or on cliki.
+This library depends on the Ironclad cryptography library.  Find it in
+Debian (as cl-ironclad) or on cliki.
 
 * Supported mechanisms
 Currently PLAIN and DIGEST-MD5 are supported.

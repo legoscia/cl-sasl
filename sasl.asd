@@ -10,7 +10,7 @@
   :version "0.1"
   :licence "BSD-style"
   :author "Magnus Henoch <henoch@dtek.chalmers.se>"
-  :depends-on (:md5)
+  :depends-on (:ironclad)
 
   :components
   ((:file "packages")

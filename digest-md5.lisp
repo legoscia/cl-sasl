@@ -87,7 +87,7 @@ as specified in RFC 2831."))
 					       (unsigned-byte 8))
 					     (map 'list #'to-bytes
 						  maybe-strings)))
-	   (h (string) (md5:md5sum-sequence (to-bytes string)))
+	   (h (string) (ironclad:digest-sequence :md5 (to-bytes string)))
 	   (kd (k s) (h (c k ":" s)))
 	   (hex (hash) (md5sum-to-hex hash)))
     (let ((a1 (if authz-id
