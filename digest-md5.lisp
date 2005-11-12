@@ -16,6 +16,7 @@
 as specified in RFC 2831."))
 
 (defmethod client-step ((c digest-md5) server-input)
+  (declare (type (vector (unsigned-byte 8)) server-input))
   (ecase (state c)
     (:start
      ;; The server goes first, so wait if no input yet
@@ -82,11 +83,12 @@ as specified in RFC 2831."))
 		     (if (stringp maybe-string)
 			 (string-to-latin1-or-utf8 maybe-string)
 		       maybe-string))
-	   (c-b (&rest maybe-strings) (apply #'concatenate 
-					     '(vector
-					       (unsigned-byte 8))
-					     (map 'list #'to-bytes
-						  maybe-strings)))
+	   (c-b (&rest maybe-strings)
+		(apply #'concatenate 
+		       '(vector
+			 (unsigned-byte 8))
+		       (map 'list #'to-bytes
+			    maybe-strings)))
 	   (h (string) (ironclad:digest-sequence :md5 (to-bytes string)))
 	   (kd (k s) (h (c k ":" s)))
 	   (hex (hash) (ironclad:byte-array-to-hex-string hash)))
@@ -109,6 +111,7 @@ as specified in RFC 2831."))
 (defun parse-challenge (challenge &optional (start 0) accumulated)
   "Parse CHALLENGE and return it as an alist.
 Start at index START."
+  (declare (type string challenge))
   (if (>= 0 (- (length challenge) start))
       accumulated
     ;; Directives are letters only - find the equal sign.
