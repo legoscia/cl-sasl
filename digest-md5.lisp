@@ -16,7 +16,10 @@
 as specified in RFC 2831."))
 
 (defmethod client-step ((c digest-md5) server-input)
-  (declare (type (vector (unsigned-byte 8)) server-input))
+  (declare (type (or (vector (unsigned-byte 8))
+		     null
+		     (eql :success))
+		 server-input))
   (ecase (state c)
     (:start
      ;; The server goes first, so wait if no input yet
