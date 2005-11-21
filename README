@@ -2,7 +2,7 @@ This is an SASL client library for Common Lisp.
 
 * Dependencies
 This library depends on the Ironclad cryptography library.  Find it in
-Debian (as cl-ironclad) or on cliki.
+Debian (as cl-ironclad), though asdf-install (as ironclad) or on cliki.
 
 * Supported mechanisms
 Currently PLAIN and DIGEST-MD5 are supported.
@@ -28,7 +28,7 @@ authentication is successful, call sasl:client-step with :SUCCESS, and
 proceed _only_ if it returns :SUCCESS.
 
 * Compatibility
-I have only tested this code on CLISP, but it should work on other
+I have tested this code on CLISP and SBCL, but it should work on other
 implementations as well.  The code assumes that CHAR-CODE returns the
 Unicode code point for every character in the given arguments.
 
