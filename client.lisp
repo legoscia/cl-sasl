@@ -2,7 +2,8 @@
 
 (defparameter mechanisms
   '(("PLAIN" . plain)
-    ("DIGEST-MD5" . digest-md5))
+    ("DIGEST-MD5" . digest-md5)
+    ("ANONYMOUS" . anonymous))
   "Alist of mappings from SASL mechanism names to class names.")
 
 (defun get-mechanism (name)
