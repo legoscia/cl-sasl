@@ -3,8 +3,12 @@
 (defclass digest-md5 (client)
   ((realm :initarg :realm
 	  :accessor realm
-	  :initform nil)
+	  :initform nil
+	  :documentation "The realm to which the user's account belongs.
+If it is not specified, the first realm that the server advertises will
+be chosen.  Many servers don't use realms.")
 
+   ;; internal variables
    (state :initform :start
 	  :accessor state)
    (nonce :accessor nonce)

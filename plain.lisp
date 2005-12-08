@@ -1,7 +1,9 @@
 (in-package :sasl)
 
 (defclass plain (client)
-  ((state :initform :start
+  (
+   ;; internal variable
+   (state :initform :start
 	  :accessor state)
 
    (mechanism-name :initform "PLAIN"))

@@ -11,21 +11,34 @@
 
 (defclass client ()
   ((authc-id :initarg :authentication-id
-	     :accessor authc-id)
+	     :accessor authc-id
+	     :documentation "The authentication id.
+This is the user whose credentials you are providing to the server.")
    (authz-id :initarg :authorization-id
 	     :accessor authz-id
-	     :initform nil)
+	     :initform nil
+	     :documentation "The authorization id.
+This is the user you want to act as.  You don't need to provide it
+unless it is different from the authentication id.")
    (password :initarg :password
 	     :accessor password
-	     :type (or string function))
+	     :type (or string function)
+	     :documentation "The password.
+This is either a string, or a function taking no arguments and
+returning the password.")
 
    (service :initarg :service
-	    :accessor service)
+	    :accessor service
+	    :documentation "The service name.
+Common values include \"xmpp\" and \"imap\".")
    (host :initarg :host
-	 :accessor host)
+	 :accessor host
+	 :documentation "The hostname of the service.")
    (serv-name :initarg :serv-name
 	      :accessor serv-name
-	      :initform nil)
+	      :initform nil
+	      :documentation "The specific server you are connecting to
+\(if different from the hostname).")
 
    (mechanism-name :reader mechanism-name
 		   :allocation :class))
