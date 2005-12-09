@@ -4,7 +4,7 @@
   (:use :cl)
   (:nicknames :cl-sasl)
   (:export
-   :get-mechanism
+   :get-mechanism :choose-mechanism
    :client :client-step :mechanism-name
    :authc-id :authz-id :password :service :host :serv-name
    :plain

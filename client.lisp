@@ -1,14 +1,48 @@
 (in-package :sasl)
 
-(defparameter mechanisms
-  '(("PLAIN" . plain)
-    ("DIGEST-MD5" . digest-md5)
-    ("ANONYMOUS" . anonymous))
-  "Alist of mappings from SASL mechanism names to class names.")
-
 (defun get-mechanism (name)
   "Return the class name for the mechanism called NAME, or nil if not implemented."
-  (cdr (assoc name mechanisms :test 'string=)))
+  (second (assoc name mechanisms :test 'string=)))
+
+(defun choose-mechanism (available &key (cleartext nil) (anonymous nil))
+  "Choose an SASL mechanism from AVAILABLE.
+Return the class implementing the mechanism, or nil if no mechanism
+is suitable.
+AVAILABLE is a list of strings, naming the mechanisms offered by the
+server.
+If CLEARTEXT is true, accept mechanisms that send passwords in clear
+text or with weak encryption.
+If ANONYMOUS is true, use mechanisms that acquire anonymous access."
+  (let ((implemented
+	 (remove-if-not #'(lambda (mechanism) (member (first mechanism) available :test #'string=))
+			mechanisms)))
+    (unless cleartext
+      (setf implemented
+	    (remove-if #'(lambda (mechanism) (member :cleartext (cddr mechanism)))
+		       implemented)))
+
+    (flet ((anonymous-p (mechanism)
+	     (member :anonymous (cddr mechanism))))
+      (setf implemented
+	    (remove-if (if anonymous
+			   (complement #'anonymous-p)
+			   #'anonymous-p)
+		       implemented)))
+
+    (second (first implemented))))
+      
+(defparameter mechanisms
+  '(("DIGEST-MD5" digest-md5)
+    ("PLAIN" plain :cleartext)
+    ("ANONYMOUS" anonymous :anonymous))
+  "List of SASL mechanisms in order of preference.
+Each element is a list describing a mechanism.  The first item is
+the name of the mechanism.  The second item is the class
+implementing it.  The remaining items are properties of the
+mechanism:
+
+:CLEARTEXT    Password is sent in clear text or with weak encryption
+:ANONYMOUS    Mechanism negotiates anonymous access")
 
 (defclass client ()
   ((authc-id :initarg :authentication-id
