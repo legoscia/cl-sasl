@@ -11,7 +11,8 @@ be an empty string (the default).")
 
    ;; internal variable
    (state :initform :start
-	  :accessor state))
+	  :accessor state)
+   (mechanism-name :initform "ANONYMOUS"))
 
   (:documentation "Client-side implementation of the SASL ANONYMOUS mechanism,
 as specified in RFC 2245 and/or draft-ietf-sasl-anon-05.  It is supposed to
