@@ -1,15 +1,53 @@
-This is an SASL client library for Common Lisp.
+This is an SASL client library for Common Lisp.  SASL is described in
+RFC 2222.
 
 * Dependencies
 This library depends on the Ironclad cryptography library.  Find it in
 Debian (as cl-ironclad), though asdf-install (as ironclad) or on cliki.
 
 * Supported mechanisms
-Currently PLAIN and DIGEST-MD5 are supported.
+Currently PLAIN, DIGEST-MD5 and ANONYMOUS are supported.
 
 * Usage
-Create an instance of the mechanism you want to use.  If you want to
-get the class name from the mechanism name, use get-mechanism.  E.g:
+
+** Choose a mechanism
+Choose a mechanism to use.  If you know what mechanism you want to
+use, pass its name to GET-MECHANISM, which returns a symbol naming a
+class, or NIL if that mechanism is not implemented.
+
+If the server has given a list of mechanisms, and you want to choose
+the best one that satisfies certain criteria, use the CHOOSE-MECHANISM
+function.  Its first argument is a list of strings naming the
+available mechanisms.  It takes two keyword arguments:
+
+ - CLEARTEXT: if true, accept mechanisms that send passwords in clear
+   text or with weak encryption (default false)
+
+ - ANONYMOUS: if and only if true, use mechanisms that acquire
+   anonymous access (default false)
+
+CHOOSE-MECHANISM returns a symbol naming a class, or NIL if no
+appropriate mechanism was found.
+
+** Create a mechanism instance
+Create an instance of the mechanism you want to use.  Initargs common
+to most mechanisms are:
+
+:AUTHENTICATION-ID       The name of the user whose password you have.
+:AUTHORIZATION-ID        The name of the user you want to impersonate.
+			 If omitted, same as authentication-id.
+:PASSWORD		 The password as a string, or a function of no
+			 arguments that returns a password.
+:SERVICE		 The service name, e.g. "xmpp" or "imap".
+:HOST			 The hostname of the service.
+:SERV-NAME		 The server you are connecting to.
+			 If omitted, same as hostname.
+
+The ANONYMOUS mechanism ignores all initargs except:
+
+:TRACE	      		 Trace information (defaults to the empty string)
+
+Example:
 
 (let* ((mechanism "DIGEST-MD5")
        (client (make-instance (sasl:get-mechanism mechanism)
@@ -20,17 +58,42 @@ get the class name from the mechanism name, use get-mechanism.  E.g:
   ...
 )
 
-Once you have such an instance, call sasl:client-step with the data
-you receive from the server (NIL if this is the first roundtrip,
-otherwise as a byte vector).  This function returns either a byte
-vector to send to the server, or :FAILURE.  Once the server says that
-authentication is successful, call sasl:client-step with :SUCCESS, and
-proceed _only_ if it returns :SUCCESS.
+** Perform authentication
+Once you have such an instance, do the following:
+
+1. If the protocol you are using permits the client to send an initial
+   "response", call CLIENT-STEP with NIL as second argument.  If it
+   returns a byte vector with non-zero length, use that as initial
+   response.
+
+2. If the server presents a challenge, call CLIENT-STEP with the
+   challenge as second argument in byte vector form.  CLIENT-STEP
+   returns either a byte vector to send as a response, or :FAILURE,
+   in which case authentication should be aborted.
+
+   Repeat this step as needed.
+
+3. If the server reports successful authentication, you are still not
+   done.  Some mechanisms perform mutual authentication, so you need
+   confirmation from CLIENT-STEP.
+
+   If the protocol allows it, and the server sends additional data
+   along with the success notification, pass that data to CLIENT-STEP
+   as if it were a challenge.  CLIENT-STEP returns either :FAILURE,
+   which means that authentication should be aborted, or a response
+   that can be ignored.
+
+   After that, call CLIENT-STEP with :SUCCESS as second argument.
+   CLIENT-STEP returns either :SUCCESS or :FAILURE.
+
+4. If the server reports authentication failure, no interaction with
+   this library is required.
 
 * Compatibility
 I have tested this code on CLISP and SBCL, but it should work on other
 implementations as well.  The code assumes that CHAR-CODE returns the
-Unicode code point for every character in the given arguments.
+Unicode code point for every character in the given arguments, and for
+ASCII characters.
 
 * Contact
 Feedback goes to henoch@dtek.chalmers.se (e-mail) or
