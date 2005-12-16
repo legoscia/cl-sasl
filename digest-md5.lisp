@@ -27,7 +27,7 @@ as specified in RFC 2831."))
   (ecase (state c)
     (:start
      ;; The server goes first, so wait if no input yet
-     (if (null server-input)
+     (if (zerop (length server-input))
 	 #()
        ;; XXX: we assume that the challenge is pure ASCII.  correct?
        (let ((challenge (parse-challenge (map 'string #'code-char server-input))))
