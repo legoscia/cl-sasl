@@ -28,7 +28,7 @@ as specified in RFC 2831."))
     (:start
      ;; The server goes first, so wait if no input yet
      (if (zerop (length server-input))
-	 #()
+	 (coerce #() '(vector (unsigned-byte 8)))
        ;; XXX: we assume that the challenge is pure ASCII.  correct?
        (let ((challenge (parse-challenge (map 'string #'code-char server-input))))
 
@@ -73,7 +73,7 @@ as specified in RFC 2831."))
 		    (response-value c nil))
 	   (progn
 	     (setf (state c) :success)
-	     #())
+	     (coerce #() '(vector (unsigned-byte 8))))
 	 :failure)))
     (:success
      (if (eql server-input :success)
