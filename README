@@ -96,8 +96,12 @@ Unicode code point for every character in the given arguments, and for
 ASCII characters.
 
 * Contact
-Feedback goes to henoch@dtek.chalmers.se (e-mail) or
-legoscia@jabber.cd.chalmers.se (Jabber/XMPP).
+Web page: http://xn--9dbdkw.se/cl-sasl.html
+Git repository: http://github.com/legoscia/cl-sasl/
+
+You can use the discussion page of the former or the issue tracker of
+the latter, or contact me directly by magnus.henoch@gmail.com (e-mail)
+or magnus.henoch@jabber.se (Jabber/XMPP).
 
 
 Local variables:
