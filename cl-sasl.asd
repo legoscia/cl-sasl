@@ -9,7 +9,7 @@
   :description "SASL library"
   :version "0.3"
   :licence "BSD-style"
-  :author "Magnus Henoch <henoch@dtek.chalmers.se>"
+  :author "Magnus Henoch <magnus.henoch@gmail.com>"
   :depends-on (:ironclad)
 
   :components
