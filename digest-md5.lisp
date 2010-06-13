@@ -123,7 +123,9 @@ Start at index START."
       accumulated
     ;; Directives are letters only - find the equal sign.
     (let* ((equal-sign (position #\= challenge :start start))
-	   (directive (subseq challenge start equal-sign))
+	   (directive (string-trim 
+		       '(#\Space #\Tab #\Newline #\Linefeed)
+		       (subseq challenge start equal-sign)))
 	   comma-position value)
       (unless equal-sign
 	(error "Couldn't parse challenge - missing equal sign"))
