@@ -16,10 +16,9 @@ as specified in RFC 2595, section 6."))
     (:start
      (setf (state c) :sent)
      (concatenate '(vector (unsigned-byte 8))
-		  (string-to-utf8 (authz-id c)) '(0)
-		  (string-to-utf8 (authc-id c)) '(0)
-		  (string-to-utf8 (get-password (password c)))))
-
+		  (string-to-utf8 (or (authz-id c) "")) '(0)
+		  (string-to-utf8     (authc-id c))     '(0)
+		  (string-to-utf8     (get-password (password c)))))
     (:sent
      :success)))
 
