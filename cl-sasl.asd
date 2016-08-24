@@ -7,7 +7,7 @@
 
 (defsystem cl-sasl
   :description "SASL library"
-  :version "0.3.1"
+  :version "0.3.2"
   :licence "BSD-style"
   :author "Magnus Henoch <magnus.henoch@gmail.com>"
   :depends-on (:ironclad)
